@@ -756,6 +756,10 @@
       /* Nav */
       nav { top: 16px; right: 16px; left: 16px; gap: 12px; justify-content: center; }
 
+      /* Nav — flip to cream over artwork */
+      nav a { color: var(--cream); opacity: 0.8; }
+      nav a:hover { color: var(--cream); opacity: 1; }
+
       /* Hero — full screen art, copy + wordmark over it */
       #hero {
         height: 100svh;
@@ -784,6 +788,7 @@
       .hero-copy .hero-cta { color: var(--cream); border-color: rgba(234,228,213,0.4); }
       .hero-wordmark {
         font-size: clamp(4rem, 18vw, 7rem);
+        bottom: 20px;
       }
 
       /* Section padding */

@@ -10,27 +10,35 @@
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://eachtraagency.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     @import url('https://fonts.cdnfonts.com/css/eachtra');
 
+    /* ─── DESIGN TOKENS ──────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cream:   #EAE4D5;
-      --cream-2: #F0EBE0;
-      --ink:     #16120D;
-      --ink-2:   #3A332A;
-      --muted:   #7A7165;
-      --muted-2: #A89F93;
-      --border:  rgba(22,18,13,0.1);
-      --font-brand: 'Eachtra', serif;
-      --font-serif: 'Fraunces', Georgia, serif;
-      --font-sans:  'Inter', -apple-system, sans-serif;
-      --crimson:     #8B1A12;
-      --lavender:    #C4A8C8;
-      --teal-accent: #2A9B9B;
-      --warm-orange: #E8834A;
+      --cream:        #EAE4D5;
+      --cream-2:      #F0EBE0;
+      --ink:          #16120D;
+      --ink-2:        #3A332A;
+      --muted:        #7A7165;
+      --muted-2:      #A89F93;
+      --border:       rgba(22,18,13,0.1);
+      --font-brand:   'Eachtra', serif;
+      --font-serif:   'Fraunces', Georgia, serif;
+      --font-sans:    'Inter', -apple-system, sans-serif;
+      --crimson:      #8B1A12;
+      --crimson-bold: #A82218;
+      --lavender:     #C4A8C8;
+      --teal-accent:  #2A9B9B;
+      --warm-orange:  #E8834A;
+
+      /* Typography scale */
+      --text-eyebrow: 10px;
+      --text-body:    15px;
+      --text-small:   13px;
+      --text-micro:   11px;
     }
 
     html { scroll-behavior: smooth; }
@@ -43,6 +51,23 @@
       overflow-x: hidden;
     }
 
+    /* ─── NAV LOGO ───────────────────────────────── */
+    .nav-logo {
+      position: fixed;
+      top: 26px;
+      left: 40px;
+      z-index: 100;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 18px;
+      color: rgba(234,228,213,0.8);
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      transition: color 300ms, opacity 300ms;
+    }
+    .nav-logo.scrolled { color: var(--ink); opacity: 0.55; }
+    .nav-logo.scrolled:hover { opacity: 1; }
+
     /* ─── NAV ─────────────────────────────────────── */
     nav {
       position: fixed;
@@ -54,17 +79,19 @@
     }
 
     nav a {
-      font-size: 10px;
+      font-size: var(--text-eyebrow);
       font-weight: 600;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--ink);
+      color: var(--cream);
       text-decoration: none;
-      opacity: 0.6;
-      transition: opacity 200ms;
+      opacity: 0.8;
+      transition: opacity 200ms, color 300ms;
       cursor: pointer;
     }
-    nav a:hover { opacity: 1; color: var(--crimson); }
+    nav a:hover { opacity: 1; color: var(--cream); }
+    nav.scrolled a { color: var(--ink); }
+    nav.scrolled a:hover { color: var(--crimson); }
 
     /* ─── HERO ────────────────────────────────────── */
     #hero {
@@ -74,65 +101,114 @@
       overflow: hidden;
     }
 
-    /* Hero artwork — fills the left panel */
+    /* Full-bleed video */
     #terrain {
       position: absolute;
       top: 0;
       left: 0;
-      width: 72%;
+      width: 100%;
       height: 100%;
       display: block;
       object-fit: cover;
-      filter: contrast(1.2) saturate(1.3);
+      filter: contrast(1.1) saturate(1.2);
+    }
+
+    /* Gradient overlay — right side ensures copy is readable */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(to left, rgba(22,18,13,0.82) 0%, rgba(22,18,13,0.4) 60%, transparent 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Bottom fade for wordmark legibility */
+    #hero::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%;
+      height: 40%;
+      background: linear-gradient(to top, rgba(22,18,13,0.55) 0%, transparent 100%);
+      z-index: 1;
+      pointer-events: none;
     }
 
     #terrain-grain {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 72%;
+      top: 0; left: 0;
+      width: 100%;
       height: 100%;
-      z-index: 1;
+      z-index: 2;
       pointer-events: none;
-      opacity: 0.22;
+      opacity: 0.18;
       mix-blend-mode: overlay;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");
       animation: grain 0.7s steps(1) infinite;
     }
 
     @keyframes grain {
-      0%   { transform: translate(0,    0);    }
-      14%  { transform: translate(-3%,  2%);   }
-      28%  { transform: translate(2%,  -3%);   }
-      42%  { transform: translate(-1%,  3%);   }
-      57%  { transform: translate(3%,  -1%);   }
-      71%  { transform: translate(-2%,  2%);   }
-      85%  { transform: translate(1%,  -2%);   }
-      100% { transform: translate(-3%,  1%);   }
+      0%   { transform: translate(0,    0);  }
+      14%  { transform: translate(-3%,  2%); }
+      28%  { transform: translate(2%,  -3%); }
+      42%  { transform: translate(-1%,  3%); }
+      57%  { transform: translate(3%,  -1%); }
+      71%  { transform: translate(-2%,  2%); }
+      85%  { transform: translate(1%,  -2%); }
+      100% { transform: translate(-3%,  1%); }
     }
 
-    /* Copy — bottom right */
-    .hero-copy {
-      position: absolute;
-      bottom: 148px;
-      right: 52px;
-      max-width: 300px;
-      text-align: left;
-    }
-
-    .hero-copy p {
-      font-family: var(--font-serif);
-      font-size: clamp(15px, 1.4vw, 20px);
-      font-weight: 300;
-      line-height: 1.5;
-      color: var(--ink);
-      letter-spacing: -0.01em;
-    }
+    /* Copy — bottom right, over gradient overlay */
+    .hero-copy { display: none; }
 
     .hero-cta {
       display: inline-block;
       margin-top: 24px;
-      font-size: 10px;
+      font-size: var(--text-eyebrow);
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(234,228,213,0.7);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(234,228,213,0.35);
+      padding-bottom: 3px;
+      transition: color 200ms, border-color 200ms;
+      cursor: pointer;
+    }
+    .hero-cta:hover {
+      color: var(--cream);
+      border-color: var(--cream);
+    }
+
+    /* Wordmark — centred in hero, fully in frame */
+    .hero-wordmark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(200px, 42vw, 560px);
+      height: auto;
+      pointer-events: none;
+      user-select: none;
+      z-index: 3;
+      opacity: 1;
+    }
+
+    /* ─── SECTION CTA (between sections) ─────────── */
+    .section-cta {
+      padding: 0 48px 72px;
+      border-top: none;
+    }
+    .section-cta-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .section-cta a {
+      display: inline-block;
+      font-size: var(--text-eyebrow);
       font-weight: 600;
       letter-spacing: 0.18em;
       text-transform: uppercase;
@@ -141,50 +217,31 @@
       border-bottom: 1px solid var(--muted-2);
       padding-bottom: 3px;
       transition: color 200ms, border-color 200ms;
-      cursor: pointer;
     }
-    .hero-cta:hover {
-      color: var(--crimson);
-      border-color: var(--crimson);
-    }
-
-    /* Giant wordmark — bottom of hero, bleeds */
-    .hero-wordmark {
-      position: absolute;
-      bottom: -0.12em;
-      left: -0.02em;
-      font-family: var(--font-brand);
-      font-size: clamp(10rem, 19vw, 20rem);
-      line-height: 1;
-      letter-spacing: -0.01em;
-      color: var(--ink);
-      white-space: nowrap;
-      pointer-events: none;
-      user-select: none;
-    }
+    .section-cta a:hover { color: var(--crimson); border-color: var(--crimson); }
 
     /* ─── MANIFESTO ──────────────────────────────────── */
     #manifesto {
-      padding: 100px 48px;
+      padding: 100px 48px 64px;
       border-top: 1px solid var(--border);
     }
     .manifesto-inner {
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
     }
     .manifesto-text {
       font-family: var(--font-serif);
-      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
       font-weight: 300;
       font-style: italic;
-      line-height: 1.2;
+      line-height: 1.15;
       letter-spacing: -0.03em;
       color: var(--ink);
     }
 
     /* ─── ABOUT ───────────────────────────────────── */
     #about {
-      padding: 120px 48px;
+      padding: 120px 48px 64px;
       border-top: 1px solid var(--border);
     }
 
@@ -196,10 +253,8 @@
       margin: 0 auto;
     }
 
-    .about-left {}
-
     .about-left .eyebrow {
-      font-size: 10px;
+      font-size: var(--text-eyebrow);
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -209,7 +264,7 @@
 
     .about-left h2 {
       font-family: var(--font-serif);
-      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      font-size: clamp(3.2rem, 5.5vw, 5.5rem);
       font-weight: 300;
       font-style: italic;
       line-height: 1.1;
@@ -238,9 +293,56 @@
       font-weight: 500;
     }
 
+    /* ─── METRICS / VERTICALS ─────────────────────── */
+    #metrics {
+      padding: 80px 48px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .metrics-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 64px;
+    }
+    .intro-copy { display: flex; flex-direction: column; gap: 28px; }
+    .intro-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+    .verticals {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      align-items: start;
+    }
+    .metric { display: flex; flex-direction: column; gap: 8px; }
+    .metric-value {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 2.8vw, 2.6rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .metric-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 400;
+      line-height: 1.4;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
     /* ─── WORK ────────────────────────────────────── */
     #work {
-      padding: 0 48px 120px;
+      padding: 0 48px 72px;
     }
 
     .work-label {
@@ -252,7 +354,7 @@
     }
 
     .work-label span {
-      font-size: 10px;
+      font-size: var(--text-eyebrow);
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -296,11 +398,7 @@
       height: 100%;
     }
 
-    .work-canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
+    .work-canvas { display: block; width: 100%; height: 100%; }
 
     .work-item-visual img,
     .work-item-visual video {
@@ -310,74 +408,74 @@
       display: block;
     }
 
-    /* ─── METRICS ────────────────────────────────────── */
-    #metrics {
-      padding: 80px 48px;
-      border-top: 1px solid var(--border);
+    .work-item-info {
+      padding: 20px 0 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
       border-bottom: 1px solid var(--border);
     }
-    .metrics-inner {
-      max-width: 1080px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 64px;
-    }
-    .intro-copy { display: flex; flex-direction: column; gap: 28px; }
-    .intro-headline {
+
+    .work-item-name {
       font-family: var(--font-serif);
-      font-size: clamp(1.8rem, 3.5vw, 3rem);
-      font-weight: 300;
       font-style: italic;
+      font-size: 18px;
       color: var(--ink);
-      line-height: 1.25;
-      letter-spacing: -0.02em;
-    }
-    .verticals {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 48px;
-      align-items: end;
-    }
-    .metric { display: flex; flex-direction: column; gap: 8px; }
-    .metric-value {
-      font-family: var(--font-serif);
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 300;
-      font-style: italic;
-      color: var(--ink);
-      line-height: 1;
-    }
-    .metric-label {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 400;
-      line-height: 1.4;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      opacity: 0.35;
     }
 
-    /* ─── SERVICES ───────────────────────────────────── */
+    .work-item-meta {
+      font-size: var(--text-eyebrow);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted-2);
+      white-space: nowrap;
+    }
+
+    .work-result {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--crimson);
+      margin-top: 4px;
+    }
+
+    .uncharted-tag {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted-2);
+      background: var(--cream);
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+    }
+
+    /* ─── SERVICES (dark) ────────────────────────── */
     #services {
-      padding: 100px 48px;
+      padding: 100px 48px 64px;
       background: var(--ink);
     }
     .services-inner { max-width: 1080px; margin: 0 auto; }
     .services-inner > .eyebrow {
-      font-size: 10px;
+      font-size: var(--text-eyebrow);
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(234,228,213,0.35);
+      color: rgba(234,228,213,0.4);
       margin-bottom: 64px;
     }
     .services-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 2px;
     }
     .service-card {
-      border-top: 1px solid rgba(234,228,213,0.12);
+      border-top: 1px solid rgba(234,228,213,0.15);
       padding: 32px 28px 36px;
       background: rgba(234,228,213,0.04);
       transition: background 250ms;
@@ -392,7 +490,7 @@
     .service-expand-icon {
       font-size: 20px;
       font-weight: 200;
-      color: var(--crimson);
+      color: var(--crimson-bold);
       line-height: 1;
       transition: transform 300ms ease;
       flex-shrink: 0;
@@ -422,28 +520,29 @@
     .service-detail-item:last-child { border-bottom: 1px solid rgba(234,228,213,0.08); }
     .service-detail-item strong {
       display: block;
-      font-size: 10px;
-      font-weight: 600;
+      font-size: var(--text-eyebrow);
+      font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--crimson);
+      color: var(--crimson-bold);
       margin-bottom: 6px;
     }
     .service-detail-item span {
-      font-size: 13px;
+      font-size: var(--text-small);
       line-height: 1.75;
-      color: rgba(234,228,213,0.45);
+      color: rgba(234,228,213,0.65);
     }
     .service-num {
-      font-size: 10px;
+      font-size: var(--text-eyebrow);
+      font-weight: 600;
       letter-spacing: 0.12em;
-      color: var(--crimson);
+      color: var(--crimson-bold);
       margin-bottom: 24px;
       display: block;
     }
     .service-card h3 {
       font-family: var(--font-serif);
-      font-size: 1.35rem;
+      font-size: 1.5rem;
       font-weight: 400;
       font-style: italic;
       color: var(--cream);
@@ -452,62 +551,103 @@
     }
     .service-card p {
       font-size: 14px;
-      line-height: 1.8;
-      color: rgba(234,228,213,0.5);
+      line-height: 1.85;
+      color: rgba(234,228,213,0.7);
       font-weight: 400;
     }
 
-    .work-item-info {
-      padding: 20px 0 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 12px;
-      border-bottom: 1px solid var(--border);
+    /* Services CTA (inside dark section) */
+    .services-cta {
+      margin-top: 64px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(234,228,213,0.1);
     }
+    .services-cta a {
+      display: inline-block;
+      font-size: var(--text-eyebrow);
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(234,228,213,0.5);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(234,228,213,0.2);
+      padding-bottom: 3px;
+      transition: color 200ms, border-color 200ms;
+    }
+    .services-cta a:hover { color: var(--cream); border-color: var(--cream); }
 
-    .work-item-name {
+    /* ─── COMPANY OS (dark) ──────────────────────── */
+    .os-section { padding: 100px 48px 64px; background: var(--ink); }
+    .os-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: start;
+    }
+    .os-eyebrow {
+      font-size: var(--text-eyebrow);
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(234,228,213,0.4);
+      margin-bottom: 28px;
+    }
+    .os-h2 {
       font-family: var(--font-serif);
+      font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+      font-weight: 300;
       font-style: italic;
-      font-size: 18px;
-      color: var(--ink);
-      opacity: 0.35;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--cream);
+      margin-bottom: 32px;
     }
-
-    .work-item-meta {
-      font-size: 10px;
+    .os-body {
+      font-size: var(--text-body);
+      line-height: 1.85;
+      color: rgba(234,228,213,0.65);
+    }
+    .os-list { display: flex; flex-direction: column; gap: 0; }
+    .os-list-item {
+      padding: 28px 0;
+      border-top: 1px solid rgba(234,228,213,0.1);
+    }
+    .os-list-item:last-child { border-bottom: 1px solid rgba(234,228,213,0.1); }
+    .os-list-label {
+      font-size: var(--text-eyebrow);
+      font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--muted-2);
-      white-space: nowrap;
+      color: var(--crimson-bold);
+      margin-bottom: 10px;
     }
-
-    .work-result {
-      font-size: 11px;
+    .os-list-body {
+      font-size: 14px;
+      line-height: 1.75;
+      color: rgba(234,228,213,0.65);
+    }
+    .os-cta {
+      margin-top: 48px;
+    }
+    .os-cta a {
+      display: inline-block;
+      font-size: var(--text-eyebrow);
       font-weight: 600;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--crimson);
-      margin-top: 4px;
+      color: rgba(234,228,213,0.5);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(234,228,213,0.2);
+      padding-bottom: 3px;
+      transition: color 200ms, border-color 200ms;
     }
-
-    /* work status corner tag */
-    .uncharted-tag {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      font-size: 9px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted-2);
-      background: var(--cream);
-      padding: 4px 10px;
-      border: 1px solid var(--border);
-    }
+    .os-cta a:hover { color: var(--cream); border-color: var(--cream); }
 
     /* ─── VALUES ──────────────────────────────────── */
     #values {
-      padding: 120px 48px;
+      padding: 120px 48px 64px;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
@@ -522,7 +662,7 @@
     }
 
     .values-left .eyebrow {
-      font-size: 10px;
+      font-size: var(--text-eyebrow);
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -532,18 +672,14 @@
 
     .values-left h2 {
       font-family: var(--font-serif);
-      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-size: clamp(1.8rem, 2.8vw, 2.6rem);
       font-weight: 400;
       font-style: italic;
       line-height: 1.3;
       color: var(--ink);
     }
 
-    .values-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
+    .values-list { display: flex; flex-direction: column; gap: 0; }
 
     .value-item {
       display: grid;
@@ -553,11 +689,10 @@
       padding: 28px 0;
       border-bottom: 1px solid var(--border);
     }
-
     .value-item:first-child { border-top: 1px solid var(--border); }
 
     .value-num {
-      font-size: 10px;
+      font-size: var(--text-eyebrow);
       letter-spacing: 0.1em;
       color: var(--crimson);
       font-variant-numeric: tabular-nums;
@@ -566,7 +701,7 @@
     .value-body h3 {
       font-family: var(--font-serif);
       font-style: italic;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 400;
       color: var(--ink);
       margin-bottom: 10px;
@@ -593,7 +728,7 @@
     }
 
     .contact-left .eyebrow {
-      font-size: 10px;
+      font-size: var(--text-eyebrow);
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -603,7 +738,7 @@
 
     .contact-left h2 {
       font-family: var(--font-serif);
-      font-size: clamp(2.4rem, 4vw, 3.5rem);
+      font-size: clamp(2.8rem, 4.5vw, 4.2rem);
       font-weight: 300;
       font-style: italic;
       line-height: 1.15;
@@ -613,34 +748,10 @@
     }
 
     .contact-left p {
-      font-size: 15px;
+      font-size: var(--text-body);
       color: var(--muted);
       line-height: 1.8;
     }
-
-    .contact-meta {
-      margin-top: 52px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .contact-meta-row {
-      display: flex;
-      gap: 20px;
-      align-items: baseline;
-      font-size: 13px;
-    }
-
-    .contact-meta-row .lbl {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted-2);
-      min-width: 72px;
-    }
-
-    .contact-meta-row .val { color: var(--muted); font-weight: 400; }
 
     .contact-form {
       display: flex;
@@ -648,11 +759,7 @@
       gap: 24px;
     }
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .field { display: flex; flex-direction: column; gap: 8px; }
 
     .field label {
       font-size: 9px;
@@ -669,7 +776,7 @@
       border: none;
       border-bottom: 1px solid var(--border);
       padding: 10px 0;
-      font-size: 15px;
+      font-size: var(--text-body);
       font-family: var(--font-sans);
       color: var(--ink);
       outline: none;
@@ -701,7 +808,7 @@
       background: var(--ink);
       color: var(--cream);
       font-family: var(--font-sans);
-      font-size: 10px;
+      font-size: var(--text-eyebrow);
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -724,7 +831,7 @@
 
     .footer-logo {
       font-family: var(--font-sans);
-      font-size: 13px;
+      font-size: var(--text-small);
       font-weight: 500;
       color: var(--ink);
       opacity: 0.35;
@@ -733,7 +840,7 @@
     }
 
     footer p {
-      font-size: 11px;
+      font-size: var(--text-micro);
       color: var(--muted-2);
       letter-spacing: 0.06em;
     }
@@ -750,14 +857,10 @@
       .reveal { opacity: 1; transform: none; transition: none; }
     }
 
-    /* ─── LAYOUT CLASSES (moved from inline) ─────── */
-    .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); }
-    .os-section { padding: 120px 48px; background: var(--ink); }
-    .os-inner { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; }
-
-    /* ─── RESPONSIVE ──────────────────────────────── */
+    /* ─── RESPONSIVE — tablet ─────────────────────── */
     @media (max-width: 900px) {
       nav { right: 24px; gap: 20px; }
+      .nav-logo { left: 24px; }
       #about, #values, #contact, #work { padding: 80px 24px; }
       .about-grid, .values-inner, .contact-inner { grid-template-columns: 1fr; gap: 48px; }
       .work-grid { grid-template-columns: 1fr; }
@@ -765,83 +868,50 @@
       .work-item.tall .work-item-visual { aspect-ratio: 4/3; height: auto; }
       .hero-copy { right: 24px; max-width: 240px; }
       footer { flex-direction: column; gap: 12px; text-align: center; }
+      .os-inner { grid-template-columns: 1fr; gap: 48px; }
     }
 
+    /* ─── RESPONSIVE — mobile ─────────────────────── */
     @media (max-width: 680px) {
-      /* Nav */
       nav { top: 16px; right: 16px; left: 16px; gap: 12px; justify-content: center; }
+      .nav-logo { left: 16px; top: 16px; font-size: 16px; }
+      nav a { color: var(--cream); opacity: 0.85; }
 
-      /* Nav — flip to cream over artwork */
-      nav a { color: var(--cream); opacity: 0.8; }
-      nav a:hover { color: var(--cream); opacity: 1; }
+      #hero { height: 100svh; min-height: 580px; overflow: hidden; }
 
-      /* Hero — full screen art, copy + wordmark over it */
-      #hero {
-        height: 100svh;
-        min-height: 580px;
-        overflow: hidden;
-      }
-      #terrain {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      #terrain-grain {
-        width: 100%;
-        height: 100%;
-      }
-      .hero-copy {
-        position: absolute;
-        bottom: 120px;
-        left: 24px;
-        right: 24px;
-        max-width: 100%;
-      }
-      .hero-copy p { color: var(--cream); }
+      .hero-copy { display: none; }
+
       .hero-wordmark {
-        font-size: clamp(4rem, 18vw, 7rem);
-        bottom: 20px;
+        width: clamp(200px, 78vw, 340px);
       }
 
-      /* Section padding */
-      #services, #os, .os-section { padding: 72px 20px; }
+      #services, .os-section { padding: 72px 20px 56px; }
       #about, #values, #contact, #work { padding: 72px 20px; }
+      .section-cta { padding: 0 20px 56px; }
 
-      /* Services grid → single col */
       .services-grid { grid-template-columns: 1fr; }
-
-      /* Intro + verticals */
       .verticals { grid-template-columns: repeat(2, 1fr); gap: 24px; }
       #metrics { padding: 60px 20px; }
 
-      /* OS section → single col */
-      .os-inner { grid-template-columns: 1fr; gap: 48px; }
-
-      /* Values */
       .values-inner { grid-template-columns: 1fr; gap: 40px; }
       .value-item { grid-template-columns: 32px 1fr; gap: 20px; }
 
-      /* Contact form */
       .field-row { grid-template-columns: 1fr; gap: 16px; }
       .contact-inner { grid-template-columns: 1fr; gap: 48px; }
 
-      /* Work */
       .work-grid { grid-template-columns: 1fr; }
-
-      /* Footer */
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 20px; }
 
-      /* Typography scale down */
-      .hero-wordmark { font-size: clamp(4rem, 18vw, 7rem); }
+      .manifesto-text { font-size: clamp(2rem, 8vw, 3rem); }
+      .intro-headline { font-size: clamp(2.2rem, 7vw, 3.2rem); }
     }
   </style>
 </head>
 <body>
 
   <!-- NAV -->
-  <nav>
+  <a class="nav-logo" id="navLogo" href="/">Eachtra</a>
+  <nav id="mainNav">
     <a href="#work">Work</a>
     <a href="#services">Services</a>
     <a href="#about">About</a>
@@ -852,7 +922,7 @@
   <section id="hero">
     <video id="terrain" src="images/painting-arete-animated.mp4" autoplay loop muted playsinline></video>
     <div id="terrain-grain"></div>
-    <div class="hero-wordmark">Eachtra</div>
+    <img class="hero-wordmark" src="images/eachtra-wordmark.png" alt="Eachtra">
   </section>
 
   <!-- INTRO + VERTICALS -->
@@ -860,19 +930,19 @@
     <div class="metrics-inner">
       <div class="intro-copy reveal">
         <p class="intro-headline">We build marketing systems<br>for creative businesses.</p>
-        <a class="hero-cta" href="#contact">Let's build something permanent</a>
+        <a class="hero-cta" href="#contact" style="color:var(--muted);border-bottom-color:var(--muted-2);">Let's build something permanent</a>
       </div>
       <div class="verticals">
         <div class="metric">
-          <span class="metric-value" style="font-size:clamp(1.4rem,2.5vw,2.2rem);font-style:italic">Music</span>
+          <span class="metric-value">Music</span>
           <span class="metric-label">Artists · Labels · Radio</span>
         </div>
         <div class="metric">
-          <span class="metric-value" style="font-size:clamp(1.4rem,2.5vw,2.2rem);font-style:italic">Events</span>
+          <span class="metric-value">Events</span>
           <span class="metric-label">Promoters · Venues · Festivals</span>
         </div>
         <div class="metric">
-          <span class="metric-value" style="font-size:clamp(1.4rem,2.5vw,2.2rem);font-style:italic">Commerce</span>
+          <span class="metric-value">Commerce</span>
           <span class="metric-label">Ecommerce · Service · Brand</span>
         </div>
       </div>
@@ -885,6 +955,13 @@
       <p class="manifesto-text reveal">There are businesses that advertise.<br>And there are businesses that are remembered.</p>
     </div>
   </section>
+
+  <!-- CTA after manifesto -->
+  <div class="section-cta">
+    <div class="section-cta-inner">
+      <a href="#contact">Get in touch →</a>
+    </div>
+  </div>
 
   <!-- ABOUT -->
   <section id="about">
@@ -912,6 +989,13 @@
       </div>
     </div>
   </section>
+
+  <!-- CTA after about -->
+  <div class="section-cta">
+    <div class="section-cta-inner">
+      <a href="#contact">Work with us →</a>
+    </div>
+  </div>
 
   <!-- SERVICES -->
   <section id="services">
@@ -1051,6 +1135,10 @@
           </div>
         </div>
       </div>
+      <!-- CTA inside dark section -->
+      <div class="services-cta">
+        <a href="#contact">Get in touch →</a>
+      </div>
     </div>
   </section>
 
@@ -1062,34 +1150,44 @@
     <div class="work-grid" id="workGrid"></div>
   </section>
 
+  <!-- CTA after work -->
+  <div class="section-cta">
+    <div class="section-cta-inner">
+      <a href="#contact">Start a project →</a>
+    </div>
+  </div>
+
   <!-- COMPANY OS -->
   <section id="os" class="os-section">
     <div class="os-inner">
       <div class="reveal">
-        <div style="font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(234,228,213,0.35);margin-bottom:28px;">The infrastructure beneath</div>
-        <h2 style="font-family:var(--font-serif);font-size:clamp(2.4rem,4vw,3.6rem);font-weight:300;font-style:italic;line-height:1.1;letter-spacing:-0.03em;color:var(--cream);margin-bottom:32px;">Your business,<br>fully visible.</h2>
-        <p style="font-size:15px;line-height:1.85;color:rgba(234,228,213,0.55);">
+        <div class="os-eyebrow">The infrastructure beneath</div>
+        <h2 class="os-h2">Your business,<br>fully visible.</h2>
+        <p class="os-body">
           We do not simply run campaigns and disappear. We build the operating system beneath your business —
           so that you always have a clear picture of what your marketing is doing,
           where your customers are coming from, and where to push next.
         </p>
+        <div class="os-cta">
+          <a href="#contact">Contact us →</a>
+        </div>
       </div>
-      <div class="reveal" style="display:flex;flex-direction:column;gap:0;">
-        <div style="padding:28px 0;border-top:1px solid rgba(234,228,213,0.1);">
-          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--crimson);margin-bottom:10px;">Sales</div>
-          <p style="font-size:14px;line-height:1.75;color:rgba(234,228,213,0.45);">Pipeline visibility, lead tracking, and voice-assisted follow-up. Every prospect accounted for. Nothing falls through.</p>
+      <div class="reveal os-list">
+        <div class="os-list-item">
+          <div class="os-list-label">Sales</div>
+          <p class="os-list-body">Pipeline visibility, lead tracking, and voice-assisted follow-up. Every prospect accounted for. Nothing falls through.</p>
         </div>
-        <div style="padding:28px 0;border-top:1px solid rgba(234,228,213,0.1);">
-          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--crimson);margin-bottom:10px;">Marketing</div>
-          <p style="font-size:14px;line-height:1.75;color:rgba(234,228,213,0.45);">Live campaign performance across every platform. What is working. What is not. And what we are doing about it.</p>
+        <div class="os-list-item">
+          <div class="os-list-label">Marketing</div>
+          <p class="os-list-body">Live campaign performance across every platform. What is working. What is not. And what we are doing about it.</p>
         </div>
-        <div style="padding:28px 0;border-top:1px solid rgba(234,228,213,0.1);">
-          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--crimson);margin-bottom:10px;">Operations</div>
-          <p style="font-size:14px;line-height:1.75;color:rgba(234,228,213,0.45);">Client onboarding, booking flows, calendar management. The machinery that lets you focus entirely on the work you were built to do.</p>
+        <div class="os-list-item">
+          <div class="os-list-label">Operations</div>
+          <p class="os-list-body">Client onboarding, booking flows, calendar management. The machinery that lets you focus entirely on the work you were built to do.</p>
         </div>
-        <div style="padding:28px 0;border-top:1px solid rgba(234,228,213,0.1);border-bottom:1px solid rgba(234,228,213,0.1);">
-          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--crimson);margin-bottom:10px;">Intelligence</div>
-          <p style="font-size:14px;line-height:1.75;color:rgba(234,228,213,0.45);">Psychographic research, market mapping, competitor analysis. The understanding that makes every decision sharper than the last.</p>
+        <div class="os-list-item">
+          <div class="os-list-label">Intelligence</div>
+          <p class="os-list-body">Psychographic research, market mapping, competitor analysis. The understanding that makes every decision sharper than the last.</p>
         </div>
       </div>
     </div>
@@ -1128,6 +1226,13 @@
     </div>
   </section>
 
+  <!-- CTA after values -->
+  <div class="section-cta">
+    <div class="section-cta-inner">
+      <a href="#contact">Get in touch →</a>
+    </div>
+  </div>
+
   <!-- CONTACT -->
   <section id="contact">
     <div class="contact-inner">
@@ -1135,50 +1240,45 @@
         <div class="eyebrow">Get in touch</div>
         <h2>Every extraordinary<br>story begins<br>with a conversation.</h2>
         <p>We work with a small number of clients at a time — by design. The work demands it. If you are building something that deserves to be known, we would like to hear about it.</p>
-        <div class="contact-meta">
-          <div class="contact-meta-row">
-            <span class="lbl">Base</span>
-            <span class="val">Berlin, Germany</span>
-          </div>
-          <div class="contact-meta-row">
-            <span class="lbl">Origin</span>
-            <span class="val">Dublin, Ireland</span>
-          </div>
-        </div>
       </div>
-      <form class="contact-form reveal" id="contactForm">
-        <div class="field-row">
-          <div class="field">
-            <label>Name</label>
-            <input type="text" id="f-name" placeholder="Your name" required>
+      <!-- Anchor so nav #contact link lands directly at the form -->
+      <div>
+        <a id="contact-form" style="display:block;position:relative;top:-80px;visibility:hidden;pointer-events:none;" aria-hidden="true"></a>
+        <form class="contact-form reveal" id="contactForm">
+          <div class="field-row">
+            <div class="field">
+              <label>Name</label>
+              <input type="text" id="f-name" placeholder="Your name" required>
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="f-email" placeholder="you@brand.com" required>
+            </div>
           </div>
           <div class="field">
-            <label>Email</label>
-            <input type="email" id="f-email" placeholder="you@brand.com" required>
+            <label>Brand / Project</label>
+            <input type="text" id="f-brand" placeholder="What are you building?">
           </div>
-        </div>
-        <div class="field">
-          <label>Brand / Project</label>
-          <input type="text" id="f-brand" placeholder="What are you building?">
-        </div>
-        <div class="field">
-          <label>Scope</label>
-          <select id="f-scope">
-            <option value="">Select...</option>
-            <option>Paid social campaign</option>
-            <option>Full marketing system (strategy + creative + execution)</option>
-            <option>Music release campaign</option>
-            <option>Event campaign</option>
-            <option>Not sure — let's talk</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Tell us about your brand</label>
-          <textarea id="f-message" rows="4" placeholder="Tell us about your brand and what you're trying to grow."></textarea>
-        </div>
-        <button type="submit" class="form-submit" id="f-btn">Send it</button>
-        <p id="f-status" style="font-size:13px;margin-top:12px;color:var(--muted);display:none"></p>
-      </form>
+          <div class="field">
+            <label>Scope</label>
+            <select id="f-scope">
+              <option value="">Select...</option>
+              <option>Paid social campaign</option>
+              <option>Music release campaign</option>
+              <option>Event campaign</option>
+              <option>Creative production</option>
+              <option>Website &amp; digital</option>
+              <option>Not sure — let's talk</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tell us about your brand</label>
+            <textarea id="f-message" rows="4" placeholder="Tell us about your brand and what you're trying to grow."></textarea>
+          </div>
+          <button type="submit" class="form-submit" id="f-btn">Send it</button>
+          <p id="f-status" style="font-size:13px;margin-top:12px;color:var(--muted);display:none"></p>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -1192,8 +1292,22 @@
   // ── Config ────────────────────────────────────────
   const SB_URL  = 'https://oowbdirzutyehjxonuug.supabase.co';
   const SB_KEY  = '***REMOVED***';
-  // Optional: paste a Make.com / n8n webhook URL here to get an instant ping on new leads
   const NOTIFY_WEBHOOK = '';
+
+  // ── Nav colour swap on scroll past hero ──────────
+  const nav = document.getElementById('mainNav');
+  const navLogo = document.getElementById('navLogo');
+  const heroSection = document.getElementById('hero');
+  const heroObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      nav.classList.remove('scrolled');
+      navLogo.classList.remove('scrolled');
+    } else {
+      nav.classList.add('scrolled');
+      navLogo.classList.add('scrolled');
+    }
+  }, { threshold: 0 });
+  heroObserver.observe(heroSection);
 
   // ── Contact form ──────────────────────────────────
   document.getElementById('contactForm').addEventListener('submit', async function(e) {
@@ -1227,7 +1341,6 @@
 
       if (!res.ok) throw new Error(await res.text());
 
-      // Ping notification webhook if configured
       if (NOTIFY_WEBHOOK) {
         fetch(NOTIFY_WEBHOOK, {
           method: 'POST',
@@ -1239,7 +1352,6 @@
         }).catch(() => {});
       }
 
-      // Success state
       document.getElementById('contactForm').style.display = 'none';
       status.style.display = 'block';
       status.style.color = 'var(--ink)';
@@ -1248,17 +1360,13 @@
     } catch(err) {
       status.style.display = 'block';
       status.style.color = 'var(--crimson)';
-      status.textContent = 'Something went wrong. Email us directly: rbrady589@gmail.com';
+      status.textContent = 'Something went wrong. Email us directly: rory@eachtraagency.com';
       btn.disabled = false;
       btn.textContent = 'Send it';
     }
   });
 
   // ── Work / case studies ───────────────────────────
-  // To add a new case study: add an object to this array, push to GitHub → live in 60 seconds.
-  // image: path to file in /images/  |  tall: true makes it span 2 rows (use for hero piece)
-  // tag: "Uncharted" = coming soon, or leave blank for live work
-  // result: one-line result stat shown on the card (optional)
   const WORK = [
     {
       name:   "sÜave — Artist EPK & Pre-Release",
@@ -1292,7 +1400,6 @@
     const grid = document.getElementById('workGrid');
     if (!grid || !WORK.length) return;
 
-    // First item goes tall on the left; remaining items stack on the right
     const [first, ...rest] = WORK;
 
     const makeCard = (item, extraStyle = '') => {
@@ -1323,7 +1430,6 @@
     }
 
     grid.innerHTML = html;
-    // Re-observe new elements for reveal animation
     grid.querySelectorAll('.reveal').forEach((el, i) => {
       el.style.transitionDelay = `${(i % 3) * 90}ms`;
       io.observe(el);

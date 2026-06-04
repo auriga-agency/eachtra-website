@@ -136,11 +136,12 @@ body { background: var(--cream); color: var(--ink); font-family: var(--font-sans
   <p>Your client reference — include this when sending creative assets:</p>
   <div class="ref-box" id="successRef">EACHTRA-REF-PENDING</div>
   <p>We'll review your submission and be in touch within 24 hours with next steps and a proposed plan of action.</p>
-  <p style="margin-top:20px;font-size:13px;">Questions? <a href="mailto:rbrady589@gmail.com" style="color:var(--ink);font-weight:600">rbrady589@gmail.com</a></p>
+  <p style="margin-top:20px;font-size:13px;">Questions? <a href="mailto:rory@eachtraagency.com" style="color:var(--ink);font-weight:600">rory@eachtraagency.com</a></p>
 </div>
 
 <script>
-const ADENGINE = 'http://localhost:5050';
+const SUPABASE_URL = 'https://oowbdirzutyehjxonuug.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vd2JkaXJ6dXR5ZWhqeG9udXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MzA0NjUsImV4cCI6MjA5MDAwNjQ2NX0.dQzJsfuJtOuqVKH0hKJbqRU3DT7gKfNbrsH5CZU2CvM';
 
 // ── Flow definitions ─────────────────────────────────────────────────────────
 const FLOWS = {
@@ -535,7 +536,7 @@ async function submitForm() {
   });
 
   // Build payload — split common fields from type-specific
-  const commonKeys = ['contact_name','contact_email','company_name','website_url','instagram_handle','tiktok_handle','monthly_budget','avg_order_value','notes','ideal_customer','differentiation','product_service_name'];
+  const commonKeys = ['contact_name','contact_email','company_name','website_url','instagram_handle','monthly_budget','avg_order_value','notes','ideal_customer','differentiation','product_service_name'];
   const payload = { client_type: selectedType, type_data: {} };
 
   Object.entries(formData).forEach(([k, v]) => {
@@ -549,24 +550,32 @@ async function submitForm() {
   document.querySelector(`#flow-step-${currentStep} .btn-next`).textContent = 'Sending…';
 
   try {
-    const res = await fetch(`${ADENGINE}/api/onboarding/submit`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/client_onboarding`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=representation',
+      },
       body: JSON.stringify(payload),
     });
     const result = await res.json();
-    if (!res.ok) throw new Error(result.error || 'Submission failed');
+    if (!res.ok) throw new Error(result.message || result[0]?.message || 'Submission failed');
+
+    const row = Array.isArray(result) ? result[0] : result;
+    const shortRef = 'EACHTRA-' + row.id.slice(0, 8).toUpperCase();
 
     document.querySelectorAll('#stepsContainer .step').forEach(s => s.classList.remove('active'));
     document.getElementById('progressFill').style.width = '100%';
     const success = document.getElementById('success');
     success.style.display = 'flex';
-    document.getElementById('successRef').textContent = result.folder_ref || 'EACHTRA-REF-PENDING';
+    document.getElementById('successRef').textContent = shortRef;
 
   } catch(err) {
     document.querySelector(`#flow-step-${currentStep} .btn-next`).disabled = false;
     document.querySelector(`#flow-step-${currentStep} .btn-next`).textContent = 'Submit →';
-    alert('Something went wrong. Please email rbrady589@gmail.com directly.');
+    alert('Something went wrong. Please email rory@eachtraagency.com directly.');
   }
 }
 

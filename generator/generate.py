@@ -21,18 +21,22 @@ import httpx
 # ── Config ────────────────────────────────────────────────────────────────────
 
 SUPABASE_URL = "https://oowbdirzutyehjxonuug.supabase.co"
-SUPABASE_KEY = "***REMOVED***"
+SUPABASE_KEY = _load_env_key("SUPABASE_SERVICE_KEY") or _load_env_key("SUPABASE_KEY")
 
 def _load_env_key(key: str) -> str | None:
     val = os.environ.get(key)
     if val:
         return val
-    env_file = Path.home() / "meta-ads-automation/.env"
-    if env_file.exists():
-        for line in env_file.read_text().splitlines():
-            if line.startswith(f"{key}="):
-                v = line.split("=", 1)[1].strip()
-                return v if v else None
+    for env_file in [
+        Path.home() / ".auriga-secrets/master.env",
+        Path.home() / "meta-ads-automation/.env",
+    ]:
+        if env_file.exists():
+            for line in env_file.read_text().splitlines():
+                if line.startswith(f"{key}="):
+                    v = line.split("=", 1)[1].strip()
+                    if v:
+                        return v
     return None
 
 OPENROUTER_API_KEY = _load_env_key("OPENROUTER_API_KEY")
@@ -223,7 +227,7 @@ def resolve_tokens(row: dict, palette: str = "cream") -> dict:
             tokens["COLOR_ACCENT_BOLD"] = hexes[0]
 
     tokens["SUPABASE_URL"] = SUPABASE_URL
-    tokens["SUPABASE_KEY"] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vd2JkaXJ6dXR5ZWhqeG9udXVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MzA0NjUsImV4cCI6MjA5MDAwNjQ2NX0.dQzJsfuJtOuqVKH0hKJbqRU3DT7gKfNbrsH5CZU2CvM"
+    tokens["SUPABASE_KEY"] = _load_env_key("SUPABASE_ANON_KEY") or ""
     return tokens
 
 
